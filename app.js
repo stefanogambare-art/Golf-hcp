@@ -147,7 +147,7 @@
     var card = el('div', 'card'); c.appendChild(card);
     // Dal / Al: mese e anno da menu a tendina (niente calendario da scorrere mese per mese)
     var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
-    var y1 = +last.substring(0, 4), y0 = Math.min(+first.substring(0, 4), y1);
+    var y1 = +last.substring(0, 4), y0 = Math.min(+first.substring(0, 4), y1 - 1);
     function monthYear(label) {
       card.appendChild(el('span', 'lbl', label));
       var r = el('div', 'row2'); card.appendChild(r);
@@ -159,9 +159,12 @@
       return { m: m, y: y };
     }
     var fSel = monthYear('Dal'), tSel = monthYear('Al');
+    var period = el('p', 'hint'); card.appendChild(period);
     // tr.from / tr.to tengono la data esatta; i menu mostrano mese e anno
     tr.from = { value: tr.fromV || first }; tr.to = { value: tr.toV || last };
     function showSel() {
+      var a0 = tr.from.value, a1 = tr.to.value; if (a0 > a1) { var t = a0; a0 = a1; a1 = t; }
+      period.textContent = 'Periodo: dal ' + displayDate(a0) + ' al ' + displayDate(a1);
       [[fSel, tr.from.value], [tSel, tr.to.value]].forEach(function (a) {
         a[0].m.value = a[1].substring(5, 7); a[0].y.value = a[1].substring(0, 4);
       });
