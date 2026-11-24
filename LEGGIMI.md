@@ -1,4 +1,4 @@
-# Golf HCP per iPhone 0.7
+# Golf HCP per iPhone 0.8
 
 Stessa app della versione Android 0.7, come web app: si apre da Safari e si installa sulla schermata Home. Non serve un Mac, né l'App Store, né un account Apple a pagamento.
 
@@ -23,7 +23,7 @@ Scheda "Simula HCP": stessi campi e stessi calcoli di Nuova gara (campo, battito
 Scheda "HCP gioco": scrivi il campo e vedi subito l'HCP di gioco per ogni battitore, calcolato con il tuo Handicap Index attuale (HI × Slope/113 + CR − Par; sui percorsi da 9 buche HI/2). Puoi cambiare l'HI per fare una prova; se il campo non è in elenco inserisci CR, Slope e Par a mano. Non salva niente.
 
 ## Andamento HCP
-Scheda "Andamento": grafico dell'Handicap Index nel tempo. Scegli il periodo con "Dal" e "Al" oppure con i pulsanti 3 mesi, 6 mesi, 1 anno, Tutto. Tocca il grafico per leggere data e HI di ogni punto. Sotto vedi HI a inizio e fine periodo, la variazione, il minimo e il massimo. Per le gare importate da federgolf usa l'"Index Nuovo" ufficiale; per le altre l'HI ricalcolato dall'app.
+Scheda "Andamento": grafico dell'Handicap Index nel tempo. Scegli il periodo con mese e anno di "Dal" e "Al" (dal primo giorno del mese all'ultimo) oppure con i pulsanti 3 mesi, 6 mesi, 1 anno, Tutto. Tocca il grafico per leggere data e HI di ogni punto. Sotto vedi HI a inizio e fine periodo, la variazione, il minimo e il massimo. Per le gare importate da federgolf usa l'"Index Nuovo" ufficiale; per le altre l'HI ricalcolato dall'app.
 
 ## Formule
 Identiche alla versione Android (stesso codice di calcolo, verificato sul tuo export federgolf 2025-2026: 39 SD su 39 e 20 "Index Nuovo" su 20 uguali a federgolf).

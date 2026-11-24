@@ -1,5 +1,5 @@
 /* Funziona anche senza rete: tiene in cache l'app; i rating si provano prima dalla rete. */
-const CACHE = 'golfhcp-0.7';
+const CACHE = 'golfhcp-0.8';
 const SHELL = ['./', 'index.html', 'golf-core.js', 'ratings.js', 'app.js', 'manifest.webmanifest', 'icon-180.png', 'icon-192.png', 'icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => {

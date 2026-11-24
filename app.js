@@ -145,18 +145,43 @@
     }
     var first = tr.points[0].date, last = today();
     var card = el('div', 'card'); c.appendChild(card);
-    var row = el('div', 'row2'); card.appendChild(row);
-    tr.from = el('input'); tr.from.type = 'date'; tr.from.value = tr.fromV || first; tr.from.min = first; tr.from.max = last;
-    tr.to = el('input'); tr.to.type = 'date'; tr.to.value = tr.toV || last; tr.to.min = first; tr.to.max = last;
-    field(row, 'Dal', tr.from); field(row, 'Al', tr.to);
+    // Dal / Al: mese e anno da menu a tendina (niente calendario da scorrere mese per mese)
+    var MESI = ['gennaio', 'febbraio', 'marzo', 'aprile', 'maggio', 'giugno', 'luglio', 'agosto', 'settembre', 'ottobre', 'novembre', 'dicembre'];
+    var y1 = +last.substring(0, 4), y0 = Math.min(+first.substring(0, 4), y1);
+    function monthYear(label) {
+      card.appendChild(el('span', 'lbl', label));
+      var r = el('div', 'row2'); card.appendChild(r);
+      var m = el('select'), y = el('select');
+      MESI.forEach(function (n, i) { var o = el('option', null, n); o.value = String(i + 1).padStart(2, '0'); m.appendChild(o); });
+      for (var k = y1; k >= y0; k--) { var o = el('option', null, String(k)); o.value = String(k); y.appendChild(o); }
+      m.setAttribute('aria-label', label + ' mese'); y.setAttribute('aria-label', label + ' anno');
+      r.appendChild(m); r.appendChild(y);
+      return { m: m, y: y };
+    }
+    var fSel = monthYear('Dal'), tSel = monthYear('Al');
+    // tr.from / tr.to tengono la data esatta; i menu mostrano mese e anno
+    tr.from = { value: tr.fromV || first }; tr.to = { value: tr.toV || last };
+    function showSel() {
+      [[fSel, tr.from.value], [tSel, tr.to.value]].forEach(function (a) {
+        a[0].m.value = a[1].substring(5, 7); a[0].y.value = a[1].substring(0, 4);
+      });
+    }
+    // Dal = giorno 1 del mese; Al = ultimo giorno del mese, al massimo oggi (come su Android)
+    function monthEnd(y, m) { var d = new Date(Date.UTC(+y, +m, 0)).toISOString().substring(0, 10); return d > last ? last : d; }
+    function fromSel() {
+      var f = fSel.y.value + '-' + fSel.m.value + '-01', t = monthEnd(tSel.y.value, tSel.m.value);
+      if (f > t) { f = tSel.y.value + '-' + tSel.m.value + '-01'; t = monthEnd(fSel.y.value, fSel.m.value); }
+      tr.from.value = f; tr.to.value = t;
+      showSel(); drawTrend();
+    }
+    [fSel.m, fSel.y, tSel.m, tSel.y].forEach(function (e) { e.addEventListener('change', fromSel); });
+    showSel();
     var quick = el('div', 'chips'); card.appendChild(quick);
     [['3 mesi', -3], ['6 mesi', -6], ['1 anno', -12], ['Tutto', 0]].forEach(function (q) {
       var b = el('button', 'chip', q[0]); b.type = 'button';
-      b.onclick = function () { tr.from.value = q[1] ? addMonths(last, q[1]) : first; tr.to.value = last; drawTrend(); };
+      b.onclick = function () { tr.from.value = q[1] ? addMonths(last, q[1]) : first; tr.to.value = last; showSel(); drawTrend(); };
       quick.appendChild(b);
     });
-    tr.from.addEventListener('change', drawTrend);
-    tr.to.addEventListener('change', drawTrend);
     tr.chart = el('div', 'chart-card'); c.appendChild(tr.chart);
     tr.stats = el('div', 'result'); c.appendChild(tr.stats);
     c.appendChild(el('p', 'hint pad', "Un punto per ogni giorno di gara: l'Handicap Index dopo quella gara. Per le gare importate dall'Excel federgolf è l'\"Index Nuovo\" ufficiale; per le altre è calcolato dall'app. Tocca il grafico per leggere un punto."));
@@ -699,7 +724,7 @@
       'Punteggio eccezionale: SD almeno 7 sotto l\'HI → −1, almeno 10 sotto → −2, applicato a quella gara e alle 19 precedenti.\n' +
       'Handicap Index = media dei migliori 8 delle ultime 20 gare valide. Con meno di 20 gare si usa la tabella WHS ' +
       '(3 gare: migliore −2; 4: migliore −1; 5: migliore; 6: media 2 migliori −1; 7-8: 2; 9-11: 3; 12-14: 4; 15-16: 5; 17-18: 6; 19: 7).\n' +
-      'Rating da ' + G.FEDERGOLF_URL + '\nVersione iPhone 0.7';
+      'Rating da ' + G.FEDERGOLF_URL + '\nVersione iPhone 0.8';
   }
   var refreshing = false;
   async function refreshCourses(manual) {
