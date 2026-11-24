@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Golf HCP</title>
+<meta name="description" content="Score differential e Handicap Index WHS con i rating federgolf">
+<meta name="theme-color" content="#1B5E20">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Golf HCP">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root {
+  --green: #1B5E20; --green-2: #2E7D32; --green-soft: #C8E6C9;
+  --bg: #F2F2F7; --card: #FFFFFF; --text: #1C1C1E; --muted: #6C6C70; --line: #E0E0E5;
+  --field: #F7F7FA; --danger: #C62828; --warn: #8D5B00; --warn-bg: #FFF4D6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #000000; --card: #1C1C1E; --text: #F2F2F7; --muted: #A1A1A6; --line: #38383A;
+    --field: #2C2C2E; --danger: #FF6B6B; --warn: #FFD27A; --warn-bg: #3A2E10; --green-2: #66BB6A;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #000000; --card: #1C1C1E; --text: #F2F2F7; --muted: #A1A1A6; --line: #38383A;
+  --field: #2C2C2E; --danger: #FF6B6B; --warn: #FFD27A; --warn-bg: #3A2E10; --green-2: #66BB6A;
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font: 16px/1.4 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  -webkit-text-size-adjust: 100%; padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+header { background: var(--green); color: #fff; padding: calc(14px + env(safe-area-inset-top)) 16px 14px; }
+header .l { color: var(--green-soft); font-size: 14px; }
+header #hi { font-size: 44px; font-weight: 700; line-height: 1.1; font-variant-numeric: tabular-nums; }
+header #hiDetail { color: var(--green-soft); font-size: 13px; }
+main { padding: 12px 16px 24px; max-width: 640px; margin: 0 auto; }
+.card { background: var(--card); border-radius: 14px; padding: 4px 14px 14px; margin-bottom: 12px; }
+.field { display: block; margin-top: 10px; min-width: 0; }
+.lbl { display: block; font-size: 13px; font-weight: 600; color: var(--green-2); margin: 10px 0 4px; }
+.field .lbl { margin-top: 0; }
+input[type=text], input[type=date], select {
+  width: 100%; font-size: 17px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--field); color: var(--text); -webkit-appearance: none; appearance: none; min-height: 44px; }
+input[type=date] { display: block; }
+select { background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+  background-position: calc(100% - 18px) 50%, calc(100% - 12px) 50%; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 30px; }
+input:focus, select:focus { outline: 2px solid var(--green-2); outline-offset: -1px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.row3 { align-items: end; }
+.row3 .lbl { font-size: 12px; line-height: 1.2; }
+.check { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 16px; }
+.check input { width: 22px; height: 22px; accent-color: var(--green-2); }
+.hint { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+.hint.pad { margin: 4px 2px 10px; }
+.warn { background: var(--warn-bg); color: var(--warn); border-radius: 8px; padding: 8px 10px; font-size: 14px; margin: 8px 0; }
+.result { background: var(--card); border-radius: 14px; padding: 12px 14px; margin-bottom: 12px; }
+.kv { display: flex; justify-content: space-between; align-items: baseline; padding: 4px 0; font-size: 16px; }
+.kv b { font-size: 20px; font-variant-numeric: tabular-nums; }
+.kv.big { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 10px; }
+.kv.big b { font-size: 28px; color: var(--green-2); }
+button { font: inherit; cursor: pointer; }
+button.primary, button.secondary, button.danger, button.plain {
+  display: block; width: 100%; min-height: 48px; border-radius: 12px; border: 0; font-size: 17px; font-weight: 600; margin-top: 10px; }
+button.primary { background: var(--green); color: #fff; }
+button.secondary { background: var(--card); color: var(--green-2); border: 1px solid var(--line); }
+.card button.secondary { background: var(--field); }
+button.danger { background: transparent; color: var(--danger); }
+button.plain { background: transparent; color: var(--green-2); font-weight: 500; }
+.bar { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.bar button { margin-top: 0; }
+.list { background: var(--card); border-radius: 14px; overflow: hidden; }
+.item { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line);
+  padding: 11px 14px; color: var(--text); }
+.item:last-child { border-bottom: 0; }
+.item.dim { opacity: .5; }
+.item .t1 { font-weight: 600; font-size: 16px; font-variant-numeric: tabular-nums; }
+.item .t2 { color: var(--muted); font-size: 13px; margin-top: 2px; }
+.star { color: #E0A800; }
+.suggest-wrap { position: relative; }
+.suggest { position: absolute; left: 0; right: 0; top: 100%; z-index: 5; background: var(--card); border: 1px solid var(--line);
+  border-radius: 10px; max-height: 280px; overflow-y: auto; box-shadow: 0 8px 24px rgba(0,0,0,.18); }
+.suggest:empty { display: none; }
+.suggest button { display: block; width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px solid var(--line);
+  padding: 12px; font-size: 16px; color: var(--text); }
+.sim-banner { background: var(--warn-bg); color: var(--warn); border-radius: 12px; padding: 10px 12px; font-size: 14px; margin-bottom: 12px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.chips { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 12px; }
+.chip { flex: 1; min-height: 36px; border-radius: 18px; border: 1px solid var(--line); background: var(--field); color: var(--green-2); font-size: 14px; font-weight: 600; }
+.chart-card { background: var(--card); border-radius: 14px; padding: 10px 8px 8px; margin-bottom: 12px; }
+.chart { width: 100%; height: auto; display: block; touch-action: pan-y; }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .ylab, .chart .xlab { fill: var(--muted); font-size: 11px; }
+.chart .line { fill: none; stroke: var(--green-2); stroke-width: 2.5; stroke-linejoin: round; }
+.chart .dot { fill: var(--card); stroke: var(--green-2); stroke-width: 2; }
+.chart .mline { stroke: var(--muted); stroke-dasharray: 3 3; }
+.chart .mdot { fill: var(--green-2); stroke: var(--card); stroke-width: 2; }
+.readout { text-align: center; font-size: 14px; min-height: 20px; color: var(--text); font-variant-numeric: tabular-nums; }
+.formulas { white-space: pre-wrap; color: var(--muted); font-size: 12px; padding: 4px 2px; overflow-wrap: anywhere; }
+.tabbar { position: fixed; left: 0; right: 0; bottom: 0; display: grid; grid-template-columns: repeat(6, 1fr);
+  background: var(--card); border-top: 1px solid var(--line); padding-bottom: env(safe-area-inset-bottom); z-index: 10; }
+.tabbar button { background: none; border: 0; padding: 8px 1px 9px; color: var(--muted); font-size: 10px; line-height: 1.15; display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.tabbar svg { width: 26px; height: 26px; }
+.tabbar button.on { color: var(--green-2); font-weight: 600; }
+.overlay { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 20; padding: 24px; }
+.dialog { background: var(--card); border-radius: 16px; padding: 18px 16px 8px; width: 100%; max-width: 380px; max-height: 85vh; overflow-y: auto; }
+.dialog h3 { margin: 0 0 8px; font-size: 18px; }
+.dialog .msg { white-space: pre-wrap; margin: 0 0 6px; font-size: 15px; }
+.dialog .buttons button { margin-top: 6px; }
+#toast { position: fixed; left: 16px; right: 16px; bottom: calc(80px + env(safe-area-inset-bottom)); background: #323232; color: #fff;
+  padding: 12px 14px; border-radius: 12px; font-size: 15px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 30; text-align: center; }
+#toast.show { opacity: .96; }
+</style>
+</head>
+<body>
+<header>
+  <div class="l">Handicap Index</div>
+  <div id="hi">–</div>
+  <div id="hiDetail"></div>
+</header>
+<main id="content"></main>
+<nav class="tabbar">
+  <button type="button" class="on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>Nuova gara</button>
+  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l5-5 4 4 8-8"/><path d="M15 8h5v5"/></svg>Simula HCP</button>
+  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V3"/><path d="M6 4l11 4-11 4"/><path d="M3 21h9"/></svg>HCP gioco</button>
+  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>Andamento</button>
+  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>Storico</button>
+  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M2 12h3M19 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1"/></svg>Impostazioni</button>
+</nav>
+<input type="file" id="fileInput" accept=".xlsx,.xls,.csv,.txt,.html,.htm,.json,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,text/csv,application/json" hidden>
+<div id="toast" role="status"></div>
+<script src="golf-core.js"></script>
+<script src="ratings.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
